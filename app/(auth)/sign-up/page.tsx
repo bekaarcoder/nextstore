@@ -7,16 +7,16 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
-import CredentialsSignInForm from './credentials-signin-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
+import SignUpForm from './sign-up-form';
 
 export const metadata: Metadata = {
-    title: 'Sign In',
+    title: 'Sign Up',
 };
 
-const LoginPage = async (props: {
+const RegisterPage = async (props: {
     searchParams: Promise<{ callbackUrl: string }>;
 }) => {
     const { callbackUrl } = await props.searchParams;
@@ -40,17 +40,17 @@ const LoginPage = async (props: {
                             priority={true}
                         />
                     </Link>
-                    <CardTitle className="text-center">Sign In</CardTitle>
+                    <CardTitle className="text-center">Sign Up</CardTitle>
                     <CardDescription className="text-center">
-                        Sign in to your account
+                        Create a new account
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <CredentialsSignInForm />
+                    <SignUpForm />
                 </CardContent>
             </Card>
         </div>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
