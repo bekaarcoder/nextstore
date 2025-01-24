@@ -14,6 +14,7 @@ const SignUpForm = () => {
     const [data, action] = useActionState(signUpUser, {
         success: false,
         message: '',
+        errors: {},
     });
 
     const searchParams = useSearchParams();
@@ -42,6 +43,11 @@ const SignUpForm = () => {
                         autoComplete="name"
                         defaultValue={signUpDefaultValues.name}
                     />
+                    {data.errors?.name && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.name}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <Label htmlFor="email">Email</Label>
@@ -52,6 +58,11 @@ const SignUpForm = () => {
                         autoComplete="email"
                         defaultValue={signUpDefaultValues.email}
                     />
+                    {data.errors?.email && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.email}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <Label htmlFor="password">Password</Label>
@@ -62,6 +73,11 @@ const SignUpForm = () => {
                         autoComplete="password"
                         defaultValue={signUpDefaultValues.password}
                     />
+                    {data.errors?.password && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.password}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <Label htmlFor="password">Confirm Password</Label>
@@ -72,6 +88,11 @@ const SignUpForm = () => {
                         autoComplete="confirmPassword"
                         defaultValue={signUpDefaultValues.confirmPassword}
                     />
+                    {data.errors?.confirmPassword && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.confirmPassword}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <SignUpButton />

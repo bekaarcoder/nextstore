@@ -14,13 +14,15 @@ const CredentialsSignInForm = () => {
     const [data, action] = useActionState(signInWithCredentials, {
         success: false,
         message: '',
+        errors: {},
     });
 
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get('callbackUrl') || '/';
 
     const SignInButton = () => {
-        const { pending } = useFormStatus();
+        const { pending, data } = useFormStatus();
+        console.log('Data:', data);
 
         return (
             <Button disabled={pending} className="w-full" variant={'default'}>
@@ -39,10 +41,14 @@ const CredentialsSignInForm = () => {
                         id="email"
                         name="email"
                         type="email"
-                        required
                         autoComplete="email"
                         defaultValue={signInDefaultValues.email}
                     />
+                    {data.errors?.email && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.email}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <Label htmlFor="password">Password</Label>
@@ -50,10 +56,14 @@ const CredentialsSignInForm = () => {
                         id="password"
                         name="password"
                         type="password"
-                        required
                         autoComplete="password"
                         defaultValue={signInDefaultValues.password}
                     />
+                    {data.errors?.password && (
+                        <span className="text-sm font-medium text-destructive">
+                            {data.errors.password}
+                        </span>
+                    )}
                 </div>
                 <div>
                     <SignInButton />

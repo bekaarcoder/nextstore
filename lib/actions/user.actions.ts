@@ -13,12 +13,20 @@ export async function signInWithCredentials(
     formData: FormData
 ) {
     try {
-        const user = signInFormSchema.parse({
+        const user = signInFormSchema.safeParse({
             email: formData.get('email'),
             password: formData.get('password'),
         });
 
-        await signIn('credentials', user);
+        if (!user.success) {
+            return {
+                success: false,
+                message: 'Please correct the field errors',
+                errors: user.error.flatten().fieldErrors,
+            };
+        }
+
+        await signIn('credentials', user.data);
 
         return { success: true, message: 'Signed in successfully' };
     } catch (error) {
@@ -38,26 +46,34 @@ export async function signOutUser() {
 // Sign up user
 export async function signUpUser(prevState: unknown, formData: FormData) {
     try {
-        const user = signUpFormSchema.parse({
+        const user = signUpFormSchema.safeParse({
             name: formData.get('name'),
             email: formData.get('email'),
             password: formData.get('password'),
             confirmPassword: formData.get('confirmPassword'),
         });
 
-        const plainPassword = user.password;
-        user.password = hashSync(user.password, 10);
+        if (!user.success) {
+            return {
+                success: false,
+                message: 'Please correct the field errors',
+                errors: user.error.flatten().fieldErrors,
+            };
+        }
+
+        const plainPassword = user.data.password;
+        const hashedPassword = hashSync(user.data.password, 10);
 
         await prisma.user.create({
             data: {
-                name: user.name,
-                email: user.email,
-                password: user.password,
+                name: user.data.name,
+                email: user.data.email,
+                password: hashedPassword,
             },
         });
 
         await signIn('credentials', {
-            email: user.email,
+            email: user.data.email,
             password: plainPassword,
         });
 
