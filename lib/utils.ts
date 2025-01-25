@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { NextRequest, NextResponse } from 'next/server';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -48,4 +49,27 @@ export function round2(value: number | string) {
     } else {
         throw new Error('Invalid value');
     }
+}
+
+export function authorized(request: NextRequest) {
+    // check for session cart cookie
+    if (!request.cookies.get('sessionCartId')) {
+        // generate new session cart id cookie
+        const sessionCartId = crypto.randomUUID();
+
+        // clone the request headers
+        const newRequestHeaders = new Headers(request.headers);
+
+        // create new response and add the new header
+        const response = NextResponse.next({
+            request: {
+                headers: newRequestHeaders,
+            },
+        });
+
+        // Set newly generated sessionCartId in the response cookies
+        response.cookies.set('sessionCartId', sessionCartId);
+        return response;
+    }
+    return true;
 }
