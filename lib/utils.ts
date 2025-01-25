@@ -51,6 +51,22 @@ export function round2(value: number | string) {
     }
 }
 
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+    currency: 'USD',
+    style: 'currency',
+    minimumFractionDigits: 2,
+});
+
+export function formatCurrency(amount: string | number | null) {
+    if (typeof amount === 'number') {
+        return CURRENCY_FORMATTER.format(amount);
+    } else if (typeof amount === 'string') {
+        return CURRENCY_FORMATTER.format(Number(amount));
+    } else {
+        return 'NaN';
+    }
+}
+
 export function authorized(request: NextRequest) {
     // check for session cart cookie
     if (!request.cookies.get('sessionCartId')) {
