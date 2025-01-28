@@ -89,3 +89,36 @@ export function authorized(request: NextRequest) {
     }
     return true;
 }
+
+export function formatId(id: string) {
+    // return `..${id.substring(id.length - 6)}`;
+    return id.split('-')[id.split('-').length - 1].toUpperCase();
+}
+
+export function formatDateTime(datetimeString: string) {
+    const date = new Date(datetimeString);
+
+    // Format the date
+    const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+        weekday: 'long', // e.g., Tuesday
+        month: 'short', // e.g., Jan
+        day: 'numeric', // e.g., 28
+        year: 'numeric', // e.g., 2025
+    });
+
+    const formattedDate = dateFormatter.format(date);
+
+    // Format the time
+    const timeFormatter = new Intl.DateTimeFormat('en-IN', {
+        hour: 'numeric', // e.g., 8
+        minute: '2-digit', // e.g., 00
+        hour12: true, // e.g., PM or AM
+    });
+
+    const formattedTime = timeFormatter.format(date);
+
+    return {
+        date: formattedDate,
+        time: formattedTime,
+    };
+}
